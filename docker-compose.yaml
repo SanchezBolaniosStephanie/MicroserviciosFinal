@@ -1,0 +1,56 @@
+version: '3.3'
+services:
+  discovery-server:
+    container_name: eureka-server
+    image: discovery-server
+    ports:
+      - 8761:8761
+  postgres-service:
+    container_name: base-red-social
+    build: servicesData/postgresdb/
+    environment:
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
+    volumes:
+      - ./blockstorage/postgres:/var/lib/postgresql/data
+  eureka-usuarios:
+    container_name: eureka-usuarios
+    image: eureka-usuarios
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service:5432/red_social_usuarios
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+      - postgres-service
+  eureka-amigos:
+    container_name: eureka-amigos
+    image: eureka-amigos
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service:5432/red_social_amigos
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+      - postgres-service
+  eureka-publicaciones:
+    container_name: eureka-publicaciones
+    image: eureka-publicaciones
+    ports:
+      - 8083:8083
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service:5432/red_social_publicaciones 
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+      - postgres-service
+

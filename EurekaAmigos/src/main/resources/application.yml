@@ -1,0 +1,70 @@
+server:
+  port: ${PORT:8082}
+
+instance.id: ${random.value}
+
+spring:
+  boot:
+    admin:
+      url: http://localhost:8090/
+  cloud:
+    config:
+      enabled: false
+  application:
+    name: api-amigos #indica el nombre con el que se va a registrar en el eureka server
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+    validateOnMigrate: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    password: admin
+    url: jdbc:postgresql://localhost:5432/red_social_amigos
+  jpa:
+    hibernate:
+      ddlAuto: validate #create
+      namingStrategy: org.hibernate.cfg.EJB3NamingStrategy
+    show-sql: true
+
+
+
+eureka:
+  client:
+    fetchRegistry: true
+    #register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+
+  instance:
+    instanceId: ${spring.application.name} #define el nombre de instancia para que aparezca en eureka server
+    hostname: localhost
+    prefer-ip-address: true #registra ip no hostname
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    metadata-map:
+      instanceId: ${instance.id}
+  server:
+    enableSelfPreservation: false
+
+
+
+ribbon:
+  eureka:
+    enabled: true
+
+management:
+  security:
+    enabled: false #desactiva mecaniscos de actuator de spring
+
+security:
+  basic:
+    enabled: false
+
+
+feign:
+  hystrix:
+    enabled: true
+
