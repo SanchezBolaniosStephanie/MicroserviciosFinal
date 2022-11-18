@@ -5,6 +5,15 @@ services:
     image: discovery-server
     ports:
       - 8761:8761
+  gateway-server:
+    container_name: gateway-server
+    image: gateway-server
+    ports:
+      - 8765:8765
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
   postgres-service:
     container_name: base-red-social
     build: servicesData/postgresdb/
@@ -27,6 +36,7 @@ services:
     depends_on:
       - discovery-server
       - postgres-service
+
   eureka-amigos:
     container_name: eureka-amigos
     image: eureka-amigos
@@ -46,7 +56,7 @@ services:
     ports:
       - 8083:8083
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service:5432/red_social_publicaciones 
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service:5432/red_social_publicaciones
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
       - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/

@@ -6,6 +6,12 @@ chmod u+x+r generaImagen.sh
 
 cd ../
 
+cd arquitectura-gateway
+chmod u+x+r generaImagen.sh
+./generaImagen.sh
+
+cd ../
+
 cd eurekaUsuarios
 chmod u+x+r generaImagen.sh
 ./generaImagen.sh

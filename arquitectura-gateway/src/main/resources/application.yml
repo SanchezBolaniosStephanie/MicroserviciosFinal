@@ -1,0 +1,49 @@
+sever:
+    port: 8765
+
+spring:
+    application:
+      name: api-gateway
+
+
+eureka:
+  client:
+    fetchRegistry: true
+    #register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    instanceId: ${spring.application.name} #define el nombre de instancia para que aparezca en eureka server
+    hostname: localhost
+    prefer-ip-address: true #registra ip no hostname
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    metadata-map:
+      instanceId: ${instance.id}
+  server:
+    enableSelfPreservation: false
+
+environment:
+  hostname: ${spring.application.name}
+
+zuul:
+  routes:
+    api-usuarios:
+      path: /red/v1/usuarios/**
+      serviceId: api-usuarios
+      stripPrefix: false
+      sensitiveHeaders: Authorization
+
+    api-amigos:
+      path: /red-smigos/v1/**
+      serviceId: api-amigos
+      stripPrefix: false
+      sensitiveHeaders: Authorization
+
+    api-publicaciones:
+      path: /red/v1/posts/**
+      serviceId: api-publicaciones
+      stripPrefix: false
+      sensitiveHeaders: Authorization
