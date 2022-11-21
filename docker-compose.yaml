@@ -5,6 +5,15 @@ services:
     image: discovery-server
     ports:
       - 8761:8761
+  monitor:
+    container_name: monitor
+    image: monitor
+    ports:
+      - 8090:8090
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
   gateway-server:
     container_name: gateway-server
     image: gateway-server
