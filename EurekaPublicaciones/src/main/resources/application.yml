@@ -49,6 +49,8 @@ eureka:
   server:
     enableSelfPreservation: false
 
+environment:
+  hostname: ${spring.application.name}
 
 
 ribbon:
